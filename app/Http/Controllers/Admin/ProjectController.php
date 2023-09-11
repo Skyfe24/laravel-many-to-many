@@ -6,6 +6,7 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Tag;
+use App\Models\Technology;
 use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
@@ -67,7 +68,8 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $tags = Tag::all();
-        return view('admin.edit', compact('project', 'tags'));
+        $technologies = Technology::all();
+        return view('admin.edit', compact('project', 'tags', 'technologies'));
     }
 
     /**
@@ -76,9 +78,16 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
 
+        $data = $request->validate([
+            'name' => 'required|string',
+            'tag_id' => 'required|integer',
+            'link' => 'required',
+            'technology' => 'required'
+        ]);
 
-        $project->fill($request->all());
 
+
+        $project->fill($data);
 
         if ($request->image) {
             $img_path = Storage::put('uploads', $request->image);
@@ -86,7 +95,7 @@ class ProjectController extends Controller
         }
 
         $project->save();
-
+        $project->technologies()->sync($request->technology);
 
         return to_route('projects.show', $project)->with('message', 'Progetto modificato con successo');
     }

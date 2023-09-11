@@ -14,6 +14,7 @@
     @csrf
    
     <div class="row mt-3">
+      ERRORI: {{ $errors }}
       <div class="col-6">
         <div class="mb-3">
           <label for="name" class="form-label">Titolo</label>
@@ -43,6 +44,19 @@
                 <option value="{{ $tag->id}}" {{ old('tag_id',$project->tag_id) == $tag->id ? 'selected' : '' }}>{{ $tag->label}}</option>
             @endforeach
           </select>
+        </div>
+      </div>
+
+      <div class="col-2">
+        <div class="mb-3">
+          <label for="technology" class="form-label"><h1>technology</h1></label>
+          
+            @foreach ($technologies as $technology)
+            <input type="checkbox" id="" name="technology[]" value="{{$technology->id}}" {{ in_array( $technology->id , old('technology',$project->technologies->all()) ) ? 'checked' : '' }}>
+            <label for=""> {{$technology->name}} </label><br>
+
+            @endforeach
+          
         </div>
       </div>
 

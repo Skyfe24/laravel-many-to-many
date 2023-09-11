@@ -21,13 +21,15 @@ class ProjectSeeder extends Seeder
     public function run(Faker $faker)
     {
         for ($i = 0; $i < 5; $i++) {
-            Project::create([
+            $project = Project::create([
                 'name' => $faker->unique()->word(),
                 'description' => $faker->paragraph(),
                 'link' => $faker->sentence(),
                 'image' => $faker->imageUrl(640, 480, 'animals', true),
                 'tag_id' => rand(1, 4)
             ]);
+
+            $project->technologies()->attach([rand(1, 5), rand(1, 5)]);
         }
     }
 }
